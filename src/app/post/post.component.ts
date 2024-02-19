@@ -30,7 +30,11 @@ export class PostComponent implements AfterViewInit, OnInit {
     console.log("ngAfterViewInit")
   }
   ngOnInit(): void {
-    console.log("ngOnInit")
+    if(localStorage.getItem('angular_post_page_number')){
+      this.pageSize = Number(localStorage.getItem('angular_post_page_number'))
+    }else{
+      localStorage.setItem('angular_post_page_number', String(this.pageSize))
+    }
     this.loadTable()
   }
   ngOnDestroy(): void {
@@ -39,15 +43,18 @@ export class PostComponent implements AfterViewInit, OnInit {
 
 
   handlePageEvent(e: PageEvent) {
+    console.log(e)
     this.pageEvent = e;
     this.length = e.length;
     this.pageSize = e.pageSize;
     this.pageIndex = e.pageIndex;
+
+    localStorage.setItem('angular_post_page_number', String(e.pageSize))
   }
 
   loadTable(): void{
     this.postSubscription = this.postService.getAllJob().subscribe((res: any) => {
-     console.log(res)
+    //  console.log(res)
      this.dataSource.data = res
     }, err => {
       console.log(err)
@@ -60,24 +67,3 @@ export interface Post {
     title: string,
     body: string
 }
-
-const ELEMENT_DATA: Post[] = [
-  {
-    "userId": 1,
-    "id": 1,
-    "title": "delectus aut autem",
-    "body": "delectus aut autem"
-  },
-  {
-    "userId": 1,
-    "id": 2,
-    "title": "quis ut nam facilis et officia qui",
-    "body": "delectus aut autem"
-  },
-  {
-    "userId": 1,
-    "id": 3,
-    "title": "fugiat veniam minus",
-    "body": "delectus aut autem"
-  }
-]
