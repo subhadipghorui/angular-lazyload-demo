@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { TodoService } from './todo.service';
 import { Subscription } from 'rxjs';
 import { AppPaginatorComponent } from '../shared/app-paginator/app-paginator.component';
@@ -21,7 +21,6 @@ export class TodoComponent implements AfterViewInit, OnInit {
 
   todoSubscription!: Subscription
 
-  // @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(AppPaginatorComponent) customPaginator!: AppPaginatorComponent;
 
   constructor(private todoService: TodoService){}

@@ -7,6 +7,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { WordsLimitPipe } from '../shared/word-limit-pipe/wordLimit-pipe.slice';
+import { SharedModule } from '../shared/shared.module';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { WordsLimitPipe } from '../shared/word-limit-pipe/wordLimit-pipe.slice';
   ],
   imports: [
     CommonModule,
+    SharedModule,
     MatTableModule, 
     MatPaginatorModule,
     MatTooltipModule,

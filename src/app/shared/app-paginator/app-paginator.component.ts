@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -24,7 +25,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
   `,
   styleUrls: ['./app-paginator.component.css'],
 })
-export class AppPaginatorComponent implements AfterViewInit {
+export class AppPaginatorComponent implements OnInit {
   @Input() pageSizeOptions: number[] = [5, 10, 20];
   @Input() length: number = 0;
   @Input() pageSize: number = 5;
@@ -34,8 +35,7 @@ export class AppPaginatorComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator) paginatorRef!: MatPaginator;
 
-  ngAfterViewInit() {
-    console.log("ngAfterViewInit app-paginate")
+  ngOnInit() {
     if(localStorage.getItem('angular_'+this.id+'_page_number')){
       this.pageSize = Number(localStorage.getItem('angular_'+this.id+'_page_number'))
     }else{

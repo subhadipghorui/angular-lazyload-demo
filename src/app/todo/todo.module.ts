@@ -3,21 +3,19 @@ import { CommonModule } from '@angular/common';
 
 import { TodoRoutingModule } from './todo-routing.module';
 import { TodoComponent } from './todo.component';
-import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
-import { AppPaginatorComponent } from '../shared/app-paginator/app-paginator.component';
+import { SharedModule } from '../shared/shared.module';
 
 
 @NgModule({
   declarations: [
-    TodoComponent,
-    AppPaginatorComponent
+    TodoComponent
   ],
   imports: [
     CommonModule,
-    MatTableModule, 
-    MatPaginatorModule,
-    TodoRoutingModule
+    SharedModule,
+    MatTableModule,
+    TodoRoutingModule,
   ]
 })
 export class TodoModule { }

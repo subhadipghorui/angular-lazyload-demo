@@ -4,6 +4,7 @@ import { LayoutComponent } from './shared/layout/layout.component';
 
 
 const routes: Routes = [
+  { path: '', redirectTo: '/post', pathMatch: 'full' },
   {
     path: '',
     component: LayoutComponent,
@@ -12,8 +13,6 @@ const routes: Routes = [
       { path: 'todo', loadChildren: () => import('./todo/todo.module').then(m => m.TodoModule) },
     ]
   },
-  
-    { path: '', redirectTo: '/post', pathMatch: 'full' },
     { path: '**', redirectTo: '/post' },
 ];
 

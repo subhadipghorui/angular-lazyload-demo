@@ -3,6 +3,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { PostService } from './post.service';
 import { Subscription } from 'rxjs';
+import { AppPaginatorComponent } from '../shared/app-paginator/app-paginator.component';
 
 @Component({
   selector: 'app-post',
@@ -13,7 +14,7 @@ export class PostComponent implements AfterViewInit, OnInit {
   displayedColumns: string[] = ['userId', 'id', 'title', 'body'];
   dataSource = new MatTableDataSource<Post>([]);
 
-  @ViewChild(MatPaginator) paginator?: MatPaginator;
+  @ViewChild(AppPaginatorComponent) customPaginator!: AppPaginatorComponent;
 
   pageEvent?: PageEvent;
   length = 50;
@@ -26,15 +27,10 @@ export class PostComponent implements AfterViewInit, OnInit {
   constructor(private postService: PostService){}
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator ?? null;
+    this.dataSource.paginator = this.customPaginator.paginatorRef ?? null;
     console.log("ngAfterViewInit")
   }
   ngOnInit(): void {
-    if(localStorage.getItem('angular_post_page_number')){
-      this.pageSize = Number(localStorage.getItem('angular_post_page_number'))
-    }else{
-      localStorage.setItem('angular_post_page_number', String(this.pageSize))
-    }
     this.loadTable()
   }
   ngOnDestroy(): void {
@@ -47,9 +43,7 @@ export class PostComponent implements AfterViewInit, OnInit {
     this.pageEvent = e;
     this.length = e.length;
     this.pageSize = e.pageSize;
-    this.pageIndex = e.pageIndex;
-
-    localStorage.setItem('angular_post_page_number', String(e.pageSize))
+    this.pageIndex = e.pageIndex; 
   }
 
   loadTable(): void{
