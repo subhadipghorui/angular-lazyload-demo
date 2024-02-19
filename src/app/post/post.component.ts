@@ -1,15 +1,17 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { PostService } from './post.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-post',
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.css']
 })
-export class PostComponent implements AfterViewInit {
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+export class PostComponent implements AfterViewInit, OnInit {
+  displayedColumns: string[] = ['userId', 'id', 'title', 'body'];
+  dataSource = new MatTableDataSource<Post>([]);
 
   @ViewChild(MatPaginator) paginator?: MatPaginator;
 
@@ -19,9 +21,22 @@ export class PostComponent implements AfterViewInit {
   pageIndex = 0;
   pageSizeOptions = [5, 10, 25];
 
+  postSubscription: Subscription|undefined
+
+  constructor(private postService: PostService){}
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator ?? null;
+    console.log("ngAfterViewInit")
   }
+  ngOnInit(): void {
+    console.log("ngOnInit")
+    this.loadTable()
+  }
+  ngOnDestroy(): void {
+    this.postSubscription?.unsubscribe();
+  }
+
 
   handlePageEvent(e: PageEvent) {
     this.pageEvent = e;
@@ -29,33 +44,40 @@ export class PostComponent implements AfterViewInit {
     this.pageSize = e.pageSize;
     this.pageIndex = e.pageIndex;
   }
+
+  loadTable(): void{
+    this.postSubscription = this.postService.getAllJob().subscribe((res: any) => {
+     console.log(res)
+     this.dataSource.data = res
+    }, err => {
+      console.log(err)
+    })
+  }
 }
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
+export interface Post {
+    userId: number,
+    id: number,
+    title: string,
+    body: string
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-  {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-  {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-  {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-  {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
-  {position: 11, name: 'Sodium', weight: 22.9897, symbol: 'Na'},
-  {position: 12, name: 'Magnesium', weight: 24.305, symbol: 'Mg'},
-  {position: 13, name: 'Aluminum', weight: 26.9815, symbol: 'Al'},
-  {position: 14, name: 'Silicon', weight: 28.0855, symbol: 'Si'},
-  {position: 15, name: 'Phosphorus', weight: 30.9738, symbol: 'P'},
-  {position: 16, name: 'Sulfur', weight: 32.065, symbol: 'S'},
-  {position: 17, name: 'Chlorine', weight: 35.453, symbol: 'Cl'},
-  {position: 18, name: 'Argon', weight: 39.948, symbol: 'Ar'},
-  {position: 19, name: 'Potassium', weight: 39.0983, symbol: 'K'},
-  {position: 20, name: 'Calcium', weight: 40.078, symbol: 'Ca'},
-];
+const ELEMENT_DATA: Post[] = [
+  {
+    "userId": 1,
+    "id": 1,
+    "title": "delectus aut autem",
+    "body": "delectus aut autem"
+  },
+  {
+    "userId": 1,
+    "id": 2,
+    "title": "quis ut nam facilis et officia qui",
+    "body": "delectus aut autem"
+  },
+  {
+    "userId": 1,
+    "id": 3,
+    "title": "fugiat veniam minus",
+    "body": "delectus aut autem"
+  }
+]
