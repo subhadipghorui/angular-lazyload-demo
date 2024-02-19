@@ -5,11 +5,13 @@ import { TodoRoutingModule } from './todo-routing.module';
 import { TodoComponent } from './todo.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
+import { AppPaginatorComponent } from '../shared/app-paginator/app-paginator.component';
 
 
 @NgModule({
   declarations: [
-    TodoComponent
+    TodoComponent,
+    AppPaginatorComponent
   ],
   imports: [
     CommonModule,

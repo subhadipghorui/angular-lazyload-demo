@@ -1,26 +1,51 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-app-paginator',
-  templateUrl: './app-paginator.component.html',
-  styleUrls: ['./app-paginator.component.css']
+  template: `
+    <mat-paginator
+      #paginatorRef
+      [pageSizeOptions]="pageSizeOptions"
+      (page)="handlePageEvent($event)"
+      showFirstLastButtons
+      [length]="length"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      aria-label="Select page of periodic elements"
+    ></mat-paginator>
+  `,
+  styleUrls: ['./app-paginator.component.css'],
 })
-export class AppPaginatorComponent {
-  pageEvent?: PageEvent;
+export class AppPaginatorComponent implements AfterViewInit {
+  @Input() pageSizeOptions: number[] = [5, 10, 20];
+  @Input() length: number = 0;
+  @Input() pageSize: number = 5;
+  @Input() pageIndex: number = 0;
+  @Input() id: string = "app";
+  @Output() pageChanged = new EventEmitter<any>();
 
+  @ViewChild(MatPaginator) paginatorRef!: MatPaginator;
 
-  @Input() totalItems?: number; // Total number of items
-  @Input() pageSize?: number; // Size of each page
-  @Input() currentPage: number = 1; // Current page number
-  @Output() paginate = new EventEmitter<any>(); // Emits data for pagination
+  ngAfterViewInit() {
+    console.log("ngAfterViewInit app-paginate")
+    if(localStorage.getItem('angular_'+this.id+'_page_number')){
+      this.pageSize = Number(localStorage.getItem('angular_'+this.id+'_page_number'))
+    }else{
+      localStorage.setItem('angular_'+this.id+'_page_number', String(this.pageSize))
+    }
+  }
+  
 
-  handlePageEvent(e: PageEvent) {
-    this.pageEvent = e;
-    console.log(this.pageEvent)
-    this.paginate.emit({
-      pageIndex:  e.pageIndex + 1, // Convert to 1-based indexing
-      pageSize:  e.pageSize
-    });
+  handlePageEvent(e: PageEvent){
+    this.pageChanged.emit(e)
+    localStorage.setItem('angular_'+this.id+'_page_number', String(e.pageSize))
   }
 }
